@@ -9,9 +9,6 @@ A Django REST Framework based API for a blog application with JWT authentication
 - CRUD operations for blog posts
 - Comments system
 - Like system
-- Pagination
-- Filtering and searching
-- Rate limiting
 
 ## Setup
 
