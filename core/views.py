@@ -1,5 +1,4 @@
 from django.shortcuts import render
-# core/views.py
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
@@ -17,7 +16,6 @@ class RegisterView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-        # If username contains 'admin' or role is admin, set as staff
         if 'admin' in user.username.lower() or getattr(user, 'role', '') == 'admin':
             user.is_staff = True
             user.save()
@@ -40,7 +38,7 @@ class LogoutView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]  # only admin can manage users
+    permission_classes = [permissions.IsAdminUser] 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -97,14 +95,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
-        # Check if user is the author of the comment
+        
         if instance.user != request.user:
             return Response({
                 "status": "error",
                 "message": "You can only edit your own comments"
             }, status=status.HTTP_403_FORBIDDEN)
             
-        # Remove post field if present in update data
+        
         if 'post' in request.data:
             del request.data['post']
             
@@ -121,7 +119,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         
-        # Check if user is the author of the comment
+        
         if instance.user != request.user:
             return Response({
                 "status": "error",
@@ -140,7 +138,7 @@ class LikeViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Check if user has already liked this post
+        
         post_id = self.request.data.get('post')
         if Like.objects.filter(user=self.request.user, post_id=post_id).exists():
             raise ValidationError("You have already liked this post")

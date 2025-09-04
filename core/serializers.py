@@ -1,4 +1,3 @@
-# core/serializers.py
 from rest_framework import serializers
 from .models import User, Post, Comment, Like
 
@@ -35,7 +34,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'text', 'created_at', 'post', 'user']
         extra_kwargs = {
-            'post': {'required': False}  # Make post field optional for updates
+            'post': {'required': False} 
         }
 
 class LikeSerializer(serializers.ModelSerializer):
