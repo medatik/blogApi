@@ -10,152 +10,6 @@ A Django REST Framework based API for a blog application with JWT authentication
 - Comments system
 - Like system
 
-## Setup
-
-1. Clone the repository
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run migrations:
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
-5. Create a superuser:
-   ```bash
-   python manage.py createsuperuser
-   ```
-6. Run the development server:
-   ```bash
-   python manage.py runserver
-   ```
-
-## API Endpoints
-
-### Authentication
-
-1. Register a new user:
-```http
-POST /api/register/
-Content-Type: application/json
-
-{
-    "username": "your_username",
-    "email": "your_email@example.com",
-    "password": "your_password"
-}
-```
-
-2. Login (Get JWT token):
-```http
-POST /api/token/
-Content-Type: application/json
-
-{
-    "username": "your_username",
-    "password": "your_password"
-}
-```
-
-Success Response:
-```json
-{
-    "refresh": "your_refresh_token",
-    "access": "your_access_token"
-}
-```
-
-3. Refresh Token:
-```http
-POST /api/token/refresh/
-Content-Type: application/json
-
-{
-    "refresh": "your_refresh_token"
-}
-```
-
-4. Logout:
-```http
-POST /api/logout/
-Authorization: Bearer your_access_token
-```
-
-Success Response:
-```json
-{
-    "status": "success",
-    "message": "Successfully logged out"
-}
-```
-
-Note: After login, use the access token in the Authorization header for all protected endpoints:
-```http
-Authorization: Bearer your_access_token
-```
-  {
-    "Authorization": "Bearer your_access_token",
-    "Content-Type": "application/json"
-  }
-  // Request Body
-  {
-    "refresh_token": "your_refresh_token"
-  }
-  ```
-
-### Users
-- GET `/api/users/`: List users (admin only)
-- POST `/api/users/`: Create user (admin only)
-- GET `/api/users/{id}/`: Retrieve user
-- PUT `/api/users/{id}/`: Update user
-- DELETE `/api/users/{id}/`: Delete user
-
-### Posts
-- GET `/api/posts/`: List posts
-- POST `/api/posts/`: Create post (authenticated)
-- GET `/api/posts/{id}/`: Retrieve post
-- PUT `/api/posts/{id}/`: Update post (author only)
-- DELETE `/api/posts/{id}/`: Delete post (author only)
-
-### Comments
-- GET `/api/comments/`: List comments
-- POST `/api/comments/`: Create comment (authenticated)
-- GET `/api/comments/{id}/`: Retrieve comment
-- PUT `/api/comments/{id}/`: Update comment (author only)
-- DELETE `/api/comments/{id}/`: Delete comment (author only)
-
-### Likes
-- GET `/api/likes/`: List likes
-- POST `/api/likes/`: Create like (authenticated)
-- DELETE `/api/likes/{id}/`: Delete like (owner only)
-
-## Testing
-
-1. Get a JWT token:
-```bash
-curl -X POST http://localhost:8000/api/token/ -d "username=your_username&password=your_password"
-```
-
-2. Use the token in subsequent requests:
-```bash
-curl -H "Authorization: Bearer your_token_here" http://localhost:8000/api/posts/
-```
-
-3. Create a new post:
-```bash
-curl -X POST \
-  -H "Authorization: Bearer your_token_here" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Test Post","content":"This is a test post","is_published":true}' \
-  http://localhost:8000/api/posts/
-```
-
 ## Security Notes
 
 For production:
@@ -229,13 +83,11 @@ pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 ```
-
 ### 5. Create superuser (admin)
 
 ```bash
 python manage.py createsuperuser
 ```
-
 ### 6. Start the development server
 
 ```bash
@@ -487,7 +339,3 @@ Authorization: Bearer your_admin_token
 GET /api/users/{id}/
 Authorization: Bearer your_admin_token
 ```
-
-Note: Only users with admin privileges (is_staff=True) can access these endpoints. Make sure your username contains 'admin' or you set the role as 'admin' during registration.
-
-Note: All requests except registration and token generation require a valid JWT token in the Authorization header. The token can be obtained by calling the `/api/token/` endpoint with valid credentials.
